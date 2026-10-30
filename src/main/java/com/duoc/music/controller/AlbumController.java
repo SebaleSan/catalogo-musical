@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.duoc.music.model.Album;
 import com.duoc.music.service.AlbumService;
 
+import jakarta.validation.Valid;
+
+import com.duoc.music.dto.AlbumResponse;
+import com.duoc.music.dto.AlbumRequest;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
 
@@ -32,42 +36,33 @@ public class AlbumController {
     }
 
     @GetMapping
-    public List<Album> listar(@RequestParam(required = false) String artist) {
-        return albumService.listar(artist);
+    public List<AlbumResponse> listar() {
+        return albumService.listar().stream()
+                .map(AlbumResponse::from)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Album> buscarPorId(@PathVariable("id") Long id) {
-        Optional<Album> album = albumService.buscarPorId(id);
-        return album.map(ResponseEntity::ok)
-                    .orElseGet(() -> ResponseEntity.notFound().build());
+    public AlbumResponse buscarPorId(@PathVariable("id") Long id) {
+        return AlbumResponse.from(albumService.buscarPorId(id));
     }
 
     @PostMapping
-    public ResponseEntity<Album> crear(@RequestBody Album datosAlbum) {
-        Album nuevoAlbum = albumService.crear(datosAlbum);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoAlbum);
+    public ResponseEntity<AlbumResponse> crear(@Valid @RequestBody Album datosAlbum) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(AlbumResponse.from(albumService.crear(datosAlbum)));
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Album> actualizar(
-            @PathVariable("id") Long id,
-            @RequestBody Album datosAlbum) {
-        Optional<Album> resultado = albumService.actualizar(id, datosAlbum);
-
-        return resultado.map(ResponseEntity::ok)
-                        .orElseGet(() -> ResponseEntity.notFound().build());
+    public AlbumResponse actualizar(@PathVariable ("id") Long id,
+                                            @Valid @RequestBody Album datosAlbum) {
+                                                return AlbumResponse.from(albumService.actualizar(id, datosAlbum));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable("id") Long id) {
-        boolean eliminado = albumService.eliminar(id);
-        if (eliminado) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        albumService.eliminar(id);
+        return ResponseEntity.noContent().build();
     }
     
     
