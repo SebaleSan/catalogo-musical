@@ -36,7 +36,10 @@ public class Album {
     private String genre;
 
     @Column(nullable = false)
-    private Integer price;
+    private Long price;
+
+    @Column (nullable = false)
+    private Integer stock;
 
     @Column(length = 255)
     private String coverArt;
