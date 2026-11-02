@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.duoc.music.model.Album;
+import com.duoc.music.dto.AlbumRequest;
 import com.duoc.music.repository.AlbumRepository;
 import com.duoc.music.error.ResourceNotFoundException;
 
@@ -39,33 +40,33 @@ public class AlbumService {
     }
 
     @Transactional
-    public Album crear(Album datos) {
+    public Album crear(AlbumRequest datos) {
 
         Album nuevoAlbum = new Album(null,
-                datos.getArtist(),
-                datos.getTitle(),
-                datos.getYear(),
-                datos.getGenre(),
-                datos.getPrice(),
-                datos.getStock(),
-                datos.getCoverArt());
+                datos.artist(),
+                datos.title(),
+                datos.year(),
+                datos.genre(),
+                datos.price(),
+                datos.stock(),
+                datos.coverArt());
                 Album albumCreado = albumRepository.save(nuevoAlbum);
         log.info("Album creado: {}", albumCreado.getIdAlbum());
         return albumCreado;
     }
 
     @Transactional 
-    public Album actualizar(Long id, Album datos) {
+    public Album actualizar(Long id, AlbumRequest datos) {
         Album albumExistente = albumRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Album no encontrado con id: " + id));
 
-        albumExistente.setArtist(datos.getArtist());
-        albumExistente.setTitle(datos.getTitle());
-        albumExistente.setYear(datos.getYear());
-        albumExistente.setGenre(datos.getGenre());
-        albumExistente.setPrice(datos.getPrice());
-        albumExistente.setStock(datos.getStock());
-        albumExistente.setCoverArt(datos.getCoverArt());
+        albumExistente.setArtist(datos.artist());
+        albumExistente.setTitle(datos.title());
+        albumExistente.setYear(datos.year());
+        albumExistente.setGenre(datos.genre());
+        albumExistente.setPrice(datos.price());
+        albumExistente.setStock(datos.stock());
+        albumExistente.setCoverArt(datos.coverArt());
 
         Album albumActualizado = albumRepository.save(albumExistente);
         log.info("Album actualizado: {}", albumActualizado.getIdAlbum());

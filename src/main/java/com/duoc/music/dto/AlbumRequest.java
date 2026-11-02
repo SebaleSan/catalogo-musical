@@ -2,6 +2,7 @@ package com.duoc.music.dto;
 
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotBlank;
 
@@ -17,7 +18,7 @@ public record AlbumRequest (
 
     @Size(max = 60, message = "El género no puede tener más de 60 caracteres") String genre,
 
-    @NotBlank(message = "El precio es obligatorio")
+    @NotNull(message = "El precio es obligatorio")
     @Min(value = 0, message = "El precio no puede ser negativo") Long price,
 
     @Min(value = 0, message = "El stock no puede ser negativo") Integer stock,
