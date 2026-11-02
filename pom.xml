@@ -76,6 +76,17 @@
     		<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
+
+		<dependency>
+    		<groupId>org.flywaydb</groupId>
+   		 	<artifactId>flyway-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-oracle</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
