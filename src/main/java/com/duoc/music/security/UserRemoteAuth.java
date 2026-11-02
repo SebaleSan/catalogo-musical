@@ -16,9 +16,9 @@ import org.springframework.web.client.RestClientException;
 
 @Component
 public class UserRemoteAuth implements AuthenticationProvider {
-    private final RestClient cliente;
+    private final RestClient client;
     public UserRemoteAuth(@Value("${music.users.url}") String url) {
-        this.cliente = RestClient.builder().baseUrl(url).build();
+        this.client = RestClient.builder().baseUrl(url).build();
     }
     @Override
     public Authentication authenticate(Authentication authentication)
@@ -26,15 +26,15 @@ public class UserRemoteAuth implements AuthenticationProvider {
         String user = authentication.getName();
         String password = String.valueOf(authentication.getCredentials());
         try {
-            RemoteProfile profile = cliente.get().uri("/api/auth/profile")
+            RemoteProfile profile = client.get().uri("/api/auth/profile")
                 .headers(h -> h.setBasicAuth(user,password))
                 .retrieve().body(RemoteProfile.class);
-            if (profile == null || profile.rol() == null || profile.user() == null
+            if (profile == null || profile.role() == null || profile.user() == null
                     || !user.equals(profile.user())) {
                 throw new BadCredentialsException("Perfil no valido");
             }
             return UsernamePasswordAuthenticationToken.authenticated(
-                user,null,List.of(new SimpleGrantedAuthority("ROLE_" + profile.rol())));
+                user,null,List.of(new SimpleGrantedAuthority("ROLE_" + profile.role())));
         } catch (HttpClientErrorException.Unauthorized | HttpClientErrorException.Forbidden ex) {
             throw new BadCredentialsException("Credenciales incorrectas");
         } catch (RestClientException ex) {
