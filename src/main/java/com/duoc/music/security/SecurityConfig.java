@@ -31,7 +31,6 @@ public class SecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(proveedor)
             .authorizeHttpRequests(a -> a
-                .requestMatchers("/hola").permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/albums","/api/albums/**").permitAll()
                 .requestMatchers("/api/albums","/api/albums/**").hasRole("ADMIN")
                 .anyRequest().denyAll())
